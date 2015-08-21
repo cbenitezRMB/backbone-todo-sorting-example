@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Backbone example</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<style>
+		.bold {
+			font-weight: bold;
+		}
+		.list-header {
+			padding: 5px 0;
+			margin: 0;
+			float: left;
+			width: 100%;
+			border-bottom: 3px solid #7B7878;
+		}
+		.list-header li {
+			float: left;
+		}
+		.d-inline-block {
+			display: inline-block;
+		}
+		.list {
+			width: 100%;
+			float: left;
+		}
+		.list > li:nth-child(odd){
+			background-color: #CBDFF8;
+		}
+		.list > li > div.padding {
+			padding-top: 5px;
+		}
+	</style>
+</head>
+<body>
+
+	
+
+	<div class="container">
+		<div id="sort">
+			<button data-sort-by="title">Titulo</button>
+		</div>
+		<div id="todo">
+
+		</div>
+		
+	</div>
+	
+	
+
+
+	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="js/underscore-min.js"></script>
+	<script type="text/javascript" src="js/backbone-min.js"></script>
+	<script type="text/javascript" src="js/handlebars-v3.0.3.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/scripts.js"></script>
+</body>
+</html>
