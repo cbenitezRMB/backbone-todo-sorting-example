@@ -1,3 +1,4 @@
 # backbone-todo-sorting-example
 
-### yeah m
+### Flujo de la App:
+#### 1- 
