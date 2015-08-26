@@ -5,12 +5,29 @@ var TodoItem = Backbone.Model.extend({
 	defaults: {
 		title: 'No title',
 		description: 'No description',
-		done: false
+		done: false,
+		creationDate: ''
 	}
 });
 
 var TodoCollection = Backbone.Collection.extend({
-	model: TodoItem
+	model: TodoItem,
+	
+	comparator: function (a) {
+		return a.get(this.comparatorString);
+	},
+
+	initialize: function(){
+		this.comparatorString = 'title';
+		vent.on('collection:sort', this.sortCollection, this);
+	},
+
+	sortCollection: function(data){
+		this.comparatorString = data;
+		console.log(this.comparatorString);
+		this.sort();
+		vent.trigger('collectionView:render');
+	}
 });
 
 var TodoSingleView = Backbone.View.extend({
@@ -58,24 +75,22 @@ var TodosList = Backbone.View.extend({
 	initialize: function(){
 		this.render();
 		vent.on('collection:saveToLocalStorage', this.saveToLocalStorage, this);
-		vent.on('collection:sort', this.sortCollection, this);
+		vent.on('collectionView:render', this.render, this);
 		this.listenTo(this.collection, 'reset', this.render);
+		this.listenTo(this.collection, 'change', this.render);
 	},
 
 	render: function(){
 		this.$el.html('');
-		if(sorted){
-			this.collection.each(this.renderSingleItem, this);
-			$('#todo').html(this.$el);
-		}else{
-			this.collection.each(this.renderSingleItem, this);
-			$('#todo').html(this.$el);
-		}
+		this.collection.each(this.renderSingleItem, this);
+		$('#todo').html(this.$el);
 	},
 
-	renderSingleItem : function(item){
-		var itemView = new TodoSingleView({ model:item });
-		this.$el.append(itemView.render().el);
+	renderSingleItem : function(item, index){
+		console.log(index);
+		var itemView = new TodoSingleView({ model:item }),
+			counter = $(itemView.render().el).prepend((index+1)+"- ");
+		this.$el.append(counter);
 	},
 
 	saveToLocalStorage: function(){
@@ -83,9 +98,8 @@ var TodosList = Backbone.View.extend({
 	},
 
 	sortCollection: function(data){
-		sorted = true;
-		localStorage.setItem('todo1Sorted', JSON.stringify(this.collection.sortBy(data)));
-		this.collection.reset(JSON.parse(localStorage.getItem('todo1Sorted')));
+		this.sortedCollection = this.collection.sortBy(data);
+		this.render();
 	}
 
 });
@@ -106,9 +120,9 @@ var Sorter = Backbone.View.extend({
 var tasks;
 if(localStorage.getItem('todo1') === null){
 	tasks = new TodoCollection([
-		new TodoItem({title:'3 Tarea de prueba',description:'prueba description',done:false}),
-		new TodoItem({title:'2 Aprender Backbone.js',description:'views events models collections',done:true}),
-		new TodoItem({title:'1 Aprender angular.js',description:'views events models collections',done:false})
+		new TodoItem({title:'Tarea de prueba',description:'prueba description',done:false, creationDate:'18-01-2014'}),
+		new TodoItem({title:'Aprender Backbone.js',description:'views events models collections',done:true, creationDate:'10-01-2015'}),
+		new TodoItem({title:'Best practices JavaScript',description:'views events models collections',done:false, creationDate:'01-01-2016'})
 	]);
 	localStorage.setItem('todo1', JSON.stringify(tasks.toJSON()));
 }else{
